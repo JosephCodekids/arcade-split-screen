@@ -13,6 +13,13 @@ namespace splitScreen {
         Camera4
     }
 
+    export enum PosType {
+        //% block="x"
+        x,
+        //% block="y"
+        y,
+    }
+
     export enum CameraRegion {
         //% block="left half"
         VerticalLeftHalf,
@@ -390,6 +397,17 @@ namespace splitScreen {
         return region;
     }
 
+    //% blockId=splitscreen_cameraposshadow
+    //% block="$camera $postype"
+    //% shim=TD_ID
+    //% weight=4
+    export function _cameraPosShadow(camera: Camera, postype: PosType) {
+        if (stateStack.length >= camid) {
+            return 0.0
+        }
+        return state().getCameraProperty(camera, postype == PosType.x ? CameraProperty.X : CameraProperty.Y);
+    }
+
     function init() {
         if (stateStack) return;
         stateStack = [new SplitScreenState()];
@@ -406,7 +424,7 @@ namespace splitScreen {
 
     function state() {
         init();
-        return stateStack[stateStack.length - 1];
+        return stateStack[stateStack.length - 1].get;
     }
 
     let rowBuff: Buffer;
@@ -418,3 +436,4 @@ namespace splitScreen {
         }
     }
 }
+
